@@ -1,74 +1,58 @@
 <?php
 namespace LifeStyleCoding\Container;
 
+use Error;
 use ReflectionClass;
+
+// TODO //
+// handle routing with comment block
 
 class Container {
     
-    protected string $class;
-    protected string|null $action;
     // TODO //
-    // liste des class instancier pour les re appeler
+    protected array $classList = [];
+    // list of instancied class to be recalled
 
-    public function __construct(string $class, string|null $action = null) {
-        $this->class = $class;
-        $this->action = $action;
-    }
-
-    public function resolveToString() {
-
-    }
-
-    public function resolve() {
+    public function resolve(string $class) {
 
         $parameters = [];
-        $reflection = new ReflectionClass($this->class);
+        $reflection = new ReflectionClass($class);
 
         if ($constructor = $reflection->getConstructor()) {
             foreach($constructor->getParameters() as $param) {
                 if ($param->hasType() && !$param->getType()->isBuiltin()) {
-                    $class = $param->getType()->getName();
-                    // TODO //
-                    // re appeler resolve si classe a besoin de construire un nouvelle obj
-                    array_push($parameters, new $class);
+                    $className = $param->getType()->getName();
+                    try {
+                        array_push($parameters, new $className);
+                    } catch(Error) {
+                        array_push($parameters, $this->resolve($className));
+                    }
                 }
             }
-            $this->newObj = $reflection->newInstanceArgs($parameters);
-            return $this->newObj;
+            $obj = $reflection->newInstanceArgs($parameters);
+            return $obj;
         }
 
-        $className = $reflection->newInstance();
-        $this->newObj = $className;
-        return $this->newObj;
+        $obj = $reflection->newInstance();
+        return $obj;
     }
 
-    public function execute(Object $object) {
-
-        // TODO //
-        // $id = 10;
-        // $pattern = "/@Route\(\"\/[a-zA-Z0-9\_\-]*\/\{([a-z]*)\}\"\)/";
-        // $test = $instance->getMethod($this->action)->getDocComment();
-        // preg_match($pattern, $test, $match);
-        // $result = $match[1];
-        // var_dump(filter_input(INPUT_SERVER, "PATH_INFO") ?? "/");
+    public function execute(Object $object, string $action) {
 
         $parameters = [];
         $instance = new ReflectionClass($object);
 
-        foreach($instance->getMethod($this->action)->getParameters() as $param) {
+        foreach($instance->getMethod($action)->getParameters() as $param) {
             if ($param->hasType() && !$param->getType()->isBuiltin()) {
                 $className = $param->getType()->getName();
-                // TODO //
-                // re appeler resolve si classe a besoin de construire un nouvelle obj
-                array_push($parameters, new $className);
+                try {
+                    array_push($parameters, new $className);
+                } catch(Error) {
+                    array_push($parameters, $this->resolve($className));
+                }
             }
         }
-        $action = $this->action;
+        $action = $action;
         $object->$action(...$parameters);
-
-        // foreach($instance->getMethods() as $method) {
-        //     foreach($method->getParameters() as $param) {
-        //     }
-        // }
     }
 }

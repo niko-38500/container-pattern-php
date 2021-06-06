@@ -23,25 +23,26 @@ step 1: To use it you have to provide the use statement for the package at your 
 use LifeStyleCoding\Container\Container;
 ```
 
-step 2: Instanciate the container class and provide the controller and the methode you wish as arguments
+step 2: Instanciate the container class
 
-step 3: run the resolve method of the container into a instance variable
+step 3: run the resolve method of the container into a instance variable and pass the class name as argument
 
-step 4: run the execute method of the container and pass the instance variable as argument
+step 4: run the execute method of the container and pass the instance variable and the class methods you wish to call as arguments
 
 exemple : 
 ```sh
 $class = "\\App\\Controller\\HomeController";
 $method = "index";
-$container = new Container($class, $method);
-$instance = $container->resolve();
-$container->execute($instance);
+$container = new Container();
+$instance = $container->resolve($class);
+$container->execute($instance, $method);
 ```
 
 ## Next update
 
-<p>improving injection to get class injected into class injected</p>
-<img src="https://cdn-images-1.medium.com/max/1200/1*cwR_ezx0jliDvVUV6yno5g.jpeg">
+<p>Adding a list of objects already instantiated, so as not to have to reinstate them</p>
+
+<p>Handle routing with block comments</p>
 
 ## Author
 
