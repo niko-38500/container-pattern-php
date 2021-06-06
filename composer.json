@@ -1,0 +1,22 @@
+{
+    "name": "life-style-coding/container-pattern-php",
+    "type": "library",
+    "description": "Injection of dependences within the typing of methods",
+    "keywords": ["dependencies injection","php"],
+    "homepage": "https://github.com/niko-38500/container-pattern-php.git",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nicolas Montmayeur",
+            "email": "nicolas.montmayeur@hotmail.fr"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "LifeStyleCoding\\Container\\": "src/"
+        }
+    }
+}
