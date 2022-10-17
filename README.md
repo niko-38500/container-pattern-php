@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> Container pattern for inversion of controle
+> ⚠️ Huge refacto in progresse the doc is no longer up to date so usage section is not working anymore
 
 ### 🏠 [Homepage](https://github.com/niko-38500/container-pattern-php.git)
 
