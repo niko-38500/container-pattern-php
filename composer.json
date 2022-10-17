@@ -11,6 +11,9 @@
             "email": "nicolas.montmayeur@hotmail.fr"
         }
     ],
+    "scripts": {
+        "tests": "./vendor/bin/phpunit ./tests"
+    },
     "require": {
         "php": ">=8.0"
     },
