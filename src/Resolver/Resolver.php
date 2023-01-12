@@ -16,7 +16,7 @@ class Resolver
     public function __construct()
     {
         $this->container = Container::getContainer();
-    } // TODO import cache machine to save dependencies into xml file
+    }
 
     /**
      * @throws UndefinedClassException|NotFoundException
@@ -40,7 +40,7 @@ class Resolver
         foreach ($classConstructor->getParameters() as $parameter) {
             if (!$parameter->hasType()) {
                 throw new AutowireException(sprintf(
-                    'Can not autowire the parameter $%s for the class %s',
+                    'Can not autowire the parameter $%s for the class %s because it has no type',
                     $parameter->getName(),
                     $className
                 ));
@@ -52,26 +52,17 @@ class Resolver
                 continue;
             }
 
-            $parsedParameter = $this->parseParameterName($parameterType->getName(), $parameter->getName());
-
-            if ($this->container->hasParameter($parsedParameter)) {
-                $constructorParameters[] = $this->container->getParameter($parsedParameter);
+            if (!$this->container->hasParameter($parameter->getName())) {
+                throw new AutowireException(sprintf(
+                    'Can not autowire the parameter $%s for the class %s',
+                    $parameter->getName(),
+                    $className
+                ));
             }
+
+            $constructorParameters[] = $this->container->getParameter($parameter->getName());
         }
 
         return new $className(...$constructorParameters);
-    }
-
-    private function parseParameterName(string $type, string $name): string
-    {
-        return $type . ' $' . $name;
-    }
-
-    /**
-     * @throws NotFoundException|AutowireException
-     */
-    private function resolveParameter(string $parameter): string
-    {
-        return $this->container->getBoundParameter($parameter);
     }
 }

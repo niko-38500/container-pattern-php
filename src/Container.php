@@ -12,11 +12,9 @@ class Container implements ContainerInterface
     private static ?self $instance = null;
 
     /** @var array<string, object> */
-    private array $dependencies = [];
+    private array $services = [];
     /** @var array<string, string> */
     private array $parameters = [];
-    /** @var array<string, string[]> */
-    private array $boundParameters = ['_default' => []];
 
     private function __construct() {}
 
@@ -38,7 +36,7 @@ class Container implements ContainerInterface
             throw new NotFoundException(sprintf('Service %s does not exist or is not registered', $service));
         }
 
-        return $this->dependencies[$service];
+        return $this->services[$service];
     }
 
     /**
@@ -56,12 +54,12 @@ class Container implements ContainerInterface
         $resolver = new Resolver();
         $resolvedClass = $resolver->autowire($service);
 
-        $this->dependencies[$service] = $resolvedClass;
+        $this->services[$service] = $resolvedClass;
     }
 
     public function has(string $service): bool
     {
-        return array_key_exists($service, $this->dependencies);
+        return array_key_exists($service, $this->services);
     }
 
     /**
@@ -93,46 +91,9 @@ class Container implements ContainerInterface
         return array_key_exists($parameter, $this->parameters);
     }
 
-    public function bindParameter(string $namespace, string $key, string $value): void
-    {
-        $this->boundParameters[$namespace][$key] = $value;
-    }
-
-    /**
-     * @throws AutowireException
-     */
-    public function getBoundParameter(string $key, string $classFQCN): string
-    {
-        if (!class_exists($classFQCN)) {
-            throw new AutowireException('Parameter $classFQCN must be a valid class name');
-        }
-
-        if (!$this->hasBoundParameter($key, $classFQCN)) {
-            throw new NotFoundException(sprintf(
-                'Parameter %s in class %s is not registered or in other namespace',
-                $key,
-                $classFQCN
-            ));
-        }
-
-        if (array_key_exists($key, $this->boundParameters['_default'])) {
-            return $this->boundParameters['_default'][$key];
-        }
-        return $this->boundParameters[$classFQCN][$key];
-    }
-
-    public function hasBoundParameter(string $key, string $classFQCN): bool
-    {
-        return
-            array_key_exists($key, $this->boundParameters['_default']) ||
-            array_key_exists($key, $this->boundParameters[$classFQCN] ?? [])
-        ;
-    }
-
     public function reset(): void
     {
-        $this->dependencies = [];
+        $this->services = [];
         $this->parameters = [];
-        $this->boundParameters = ['_default' => []];
     }
 }

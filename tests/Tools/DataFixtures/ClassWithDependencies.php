@@ -6,10 +6,7 @@ namespace Container\Tests\Tools\DataFixtures;
 
 class ClassWithDependencies
 {
-    private ClassWithNoDependencies $classWithNoDependencies;
-
-    public function __construct(ClassWithNoDependencies $classWithNoDependencies)
+    public function __construct(public ClassWithNoDependencies $classWithNoDependencies)
     {
-        $this->classWithNoDependencies = $classWithNoDependencies;
     }
 }

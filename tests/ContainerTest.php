@@ -4,7 +4,6 @@ namespace Container\Tests;
 
 use Container\Container;
 use Container\ContainerInterface;
-use Container\Exception\AutowireException;
 use Container\Exception\Container\DuplicateException;
 use Container\Exception\Container\NotFoundException;
 use Container\Tests\Tools\DataFixtures\ClassWithDependencies;
@@ -35,8 +34,6 @@ class ContainerTest extends TestCase
 
     public function testSingleton()
     {
-        $this->container->set(ClassWithNoDependencies::class);
-        $this->container->setParameter('param', 'value');
         self::assertSame($this->container, Container::getContainer());
     }
 
@@ -63,6 +60,7 @@ class ContainerTest extends TestCase
         $this->container->set(ClassWithDependencies::class);
 
         self::assertInstanceOf(ClassWithDependencies::class, $expectedClass);
+        self::assertInstanceOf(ClassWithNoDependencies::class, $expectedClass->classWithNoDependencies);
     }
 
     public function testHas()
@@ -106,75 +104,5 @@ class ContainerTest extends TestCase
     public function testHasParameterWithNoMatching()
     {
         self::assertFalse($this->container->hasParameter('key'));
-    }
-
-    public function testBindParameter()
-    {
-        $this->container->bindParameter('_default', 'string $test', 'value');
-        self::assertSame(
-            'value',
-            $this->container->getBoundParameter('string $test', ClassWithNoDependencies::class)
-        );
-    }
-
-    private function parameterProvider(): \Iterator
-    {
-        yield 'check with valid parameter key' => ['string $test', false];
-        yield 'check with invalid parameter key: no dollars signe' => ['string test', true];
-        yield 'check with invalid parameter key: too mush work' => ['string $test deux', true];
-        yield 'check with invalid parameter key: bad space' => ['string $ test', true];
-        yield 'check with invalid parameter key: no type' => ['$test', true];
-        yield 'check with invalid parameter key: just a string' => ['test', true];
-    }
-
-    /**
-     * @dataProvider parameterProvider
-     */
-    public function testBindParameterWithInvalidKey(string $parameter, bool $shouldThrowException)
-    {
-        if ($shouldThrowException) {
-            $this->expectException(AutowireException::class);
-            $this->expectExceptionMessage('Can not bind parameter "' . $parameter . '": invalid key');
-            $this->container->bindParameter('_default', $parameter, 'value');
-            return;
-        }
-        $this->container->bindParameter(ClassWithNoDependencies::class, $parameter, 'value');
-        self::assertSame(
-            'value',
-            $this->container->getBoundParameter($parameter, ClassWithNoDependencies::class)
-        );
-    }
-
-    public function testGetBoundParameterInWrongNamespace()
-    {
-        $this->container->bindParameter(ClassWithDependencies::class, 'string $test', 'value');
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage(
-            'Parameter string $test in class ' .
-            ClassWithNoDependencies::class .
-            ' is not registered or in other namespace'
-        );
-        $this->container->getBoundParameter('string $test', ClassWithNoDependencies::class);
-    }
-
-    public function testBindParameterWithDuplicate()
-    {
-        $this->expectException(DuplicateException::class);
-        $this->expectExceptionMessage('Error parameter "string $test" is already registered');
-        $this->container->bindParameter('_default', 'string $test', 'value');
-    }
-
-    public function testGetBoundParameterWithInvalidKey()
-    {
-        $this->expectException(DuplicateException::class);
-        $this->expectExceptionMessage('Can not get parameter "string test": invalid syntax');
-        $this->container->bindParameter('_default', 'string $test', 'value');
-    }
-
-    public function testGetNotBoundParameter()
-    {
-        $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage('Parameter "string test" is not registered');
-        $this->container->bindParameter('_default', 'string $test', 'value');
     }
 }

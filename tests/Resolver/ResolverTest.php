@@ -6,7 +6,7 @@ use Container\Container;
 use Container\Exception\AutowireException;
 use Container\Exception\Resolver\UndefinedClassException;
 use Container\Resolver\Resolver;
-use Container\Tests\Tools\DataFixtures\ClassThirdLayerDependency;
+use Container\Tests\Tools\DataFixtures\ClassWithDeepDependencies;
 use Container\Tests\Tools\DataFixtures\ClassWithDependencies;
 use Container\Tests\Tools\DataFixtures\ClassWithDependencyAndParameter;
 use Container\Tests\Tools\DataFixtures\ClassWithNoDependencies;
@@ -21,6 +21,7 @@ class ResolverTest extends TestCase
         parent::setUp();
 
         $this->resolver = new Resolver();
+        Container::getContainer()->reset();
     }
 
     public function testResolveByFQCNWithNotExisting()
@@ -40,23 +41,31 @@ class ResolverTest extends TestCase
     {
         $resolvedClass = $this->resolver->autowire(ClassWithDependencies::class);
         self::assertInstanceOf(ClassWithDependencies::class, $resolvedClass);
+        self::assertInstanceOf(ClassWithNoDependencies::class, $resolvedClass->classWithNoDependencies);
     }
 
     public function testResolveClassWithDeepDependencies()
     {
-        $resolvedClass = $this->resolver->autowire(ClassThirdLayerDependency::class);
-        self::assertInstanceOf(ClassThirdLayerDependency::class, $resolvedClass);
+        $resolvedClass = $this->resolver->autowire(ClassWithDeepDependencies::class);
+        self::assertInstanceOf(ClassWithDeepDependencies::class, $resolvedClass);
     }
 
     public function testResolveClassWithParameterAndDeepDependencies()
     {
         $container = Container::getContainer();
-        $container->setParameter('boundParameter', 'value');
+        $value = 'value';
+        $container->setParameter('boundParameter', $value);
         $resolvedClass = $this->resolver->autowire(ClassWithDependencyAndParameter::class);
-        self::assertInstanceOf(ClassThirdLayerDependency::class, $resolvedClass);
+        self::assertInstanceOf(ClassWithDependencyAndParameter::class, $resolvedClass);
+        self::assertInstanceOf(ClassWithDependencies::class, $resolvedClass->classWithDependencies);
+        self::assertInstanceOf(
+            ClassWithNoDependencies::class,
+            $resolvedClass->classWithDependencies->classWithNoDependencies
+        );
+        self::assertEquals($value, $resolvedClass->boundParameter);
     }
 
-    public function testResolveClassWithUnresolvableParameter()
+    public function testResolveClassWithUnregisteredParameter()
     {
         $this->expectException(AutowireException::class);
         $this->expectExceptionMessage(

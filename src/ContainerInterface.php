@@ -18,11 +18,5 @@ interface ContainerInterface
 
     public function hasParameter(string $parameter): bool;
 
-    public function bindParameter(string $namespace, string $key, string $value): void;
-
-    public function getBoundParameter(string $key, string $classFQCN): string;
-
-    public function hasBoundParameter(string $key, string $classFQCN): bool;
-
     public function reset(): void;
 }

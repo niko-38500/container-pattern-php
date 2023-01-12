@@ -6,12 +6,7 @@ namespace Container\Tests\Tools\DataFixtures;
 
 class ClassWithDependencyAndParameter
 {
-    private ClassWithDependencies $classWithDependencies;
-    private string $boundParameter;
-
-    public function __construct(ClassWithDependencies $classWithDependencies, string $boundParameter)
+    public function __construct(public ClassWithDependencies $classWithDependencies, public string $boundParameter)
     {
-        $this->classWithDependencies = $classWithDependencies;
-        $this->boundParameter = $boundParameter;
     }
 }

@@ -1,7 +1,7 @@
 {
     "name": "life-style-coding/container-pattern-php",
     "type": "library",
-    "description": "Injection of dependences within the typing of methods",
+    "description": "Small library of dependency inversion with container",
     "keywords": ["dependencies injection","php"],
     "homepage": "https://github.com/niko-38500/container-pattern-php.git",
     "license": "MIT",
