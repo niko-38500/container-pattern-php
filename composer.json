@@ -2,8 +2,9 @@
     "name": "life-style-coding/container-pattern-php",
     "type": "library",
     "description": "Small library of dependency inversion with container",
-    "keywords": ["dependencies injection","php"],
+    "keywords": ["dependency inversion", "IOT", "container","php"],
     "homepage": "https://github.com/niko-38500/container-pattern-php.git",
+    "version": "1.1.0",
     "license": "MIT",
     "authors": [
         {

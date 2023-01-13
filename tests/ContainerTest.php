@@ -6,8 +6,12 @@ use Container\Container;
 use Container\ContainerInterface;
 use Container\Exception\Container\DuplicateException;
 use Container\Exception\Container\NotFoundException;
+use Container\Exception\Resolver\CircularReferenceException;
+use Container\Tests\Tools\DataFixtures\ClassWithCircularReference;
 use Container\Tests\Tools\DataFixtures\ClassWithDependencies;
+use Container\Tests\Tools\DataFixtures\ClassWithIndirectCircularReference;
 use Container\Tests\Tools\DataFixtures\ClassWithNoDependencies;
+use Container\Tests\Tools\DataFixtures\OtherClassWithCircularReference;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -104,5 +108,17 @@ class ContainerTest extends TestCase
     public function testHasParameterWithNoMatching()
     {
         self::assertFalse($this->container->hasParameter('key'));
+    }
+
+    public function testSetServiceWithCircularReference()
+    {
+        $this->expectException(CircularReferenceException::class);
+        self::expectExceptionMessage(sprintf(
+            'A circular reference has been detected into the class %s for the dependency %s',
+            ClassWithCircularReference::class,
+            OtherClassWithCircularReference::class
+        ));
+
+        $this->container->set(ClassWithIndirectCircularReference::class);
     }
 }

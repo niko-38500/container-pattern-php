@@ -28,6 +28,8 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Get a service from the container
+     *
      * @throws NotFoundException
      */
     public function get(string $service): object
@@ -40,6 +42,8 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Define a service into the container
+     *
      * @throws DuplicateException
      * @throws AutowireException
      * @throws UndefinedClassException
@@ -57,12 +61,17 @@ class Container implements ContainerInterface
         $this->services[$service] = $resolvedClass;
     }
 
+    /**
+     * check if container has specified service
+     */
     public function has(string $service): bool
     {
         return array_key_exists($service, $this->services);
     }
 
     /**
+     * Get a parameter from the container
+     *
      * @throws NotFoundException
      */
     public function getParameter(string $parameter): string
@@ -75,6 +84,8 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Set a parameter into the container
+     *
      * @throws DuplicateException
      */
     public function setParameter(string $key, string $value): void
@@ -86,11 +97,17 @@ class Container implements ContainerInterface
         $this->parameters[$key] = $value;
     }
 
+    /**
+     * Check if container has parameter
+     */
     public function hasParameter(string $parameter): bool
     {
         return array_key_exists($parameter, $this->parameters);
     }
 
+    /**
+     * reset the container from all services and parameters
+     */
     public function reset(): void
     {
         $this->services = [];
