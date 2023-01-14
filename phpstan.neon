@@ -1,0 +1,86 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Container\\\\Container\\:\\:getParameter\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Container.php
+
+		-
+			message: "#^Method Container\\\\Container\\:\\:setParameter\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Container.php
+
+		-
+			message: "#^Method Container\\\\ContainerInterface\\:\\:getParameter\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ContainerInterface.php
+
+		-
+			message: "#^Method Container\\\\ContainerInterface\\:\\:setParameter\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ContainerInterface.php
+
+		-
+			message: "#^PHPDoc tag @return contains unresolvable type\\.$#"
+			count: 1
+			path: src/ContainerInterface.php
+
+		-
+			message: "#^Method Container\\\\ParameterBag\\\\ParameterBag\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ParameterBag/ParameterBag.php
+
+		-
+			message: "#^Method Container\\\\ParameterBag\\\\ParameterBag\\:\\:set\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ParameterBag/ParameterBag.php
+
+		-
+			message: "#^Property Container\\\\ParameterBag\\\\ParameterBag\\:\\:\\$parameters type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ParameterBag/ParameterBag.php
+
+		-
+			message: "#^Method Container\\\\ParameterBag\\\\ParameterBagInterface\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ParameterBag/ParameterBagInterface.php
+
+		-
+			message: "#^Method Container\\\\ParameterBag\\\\ParameterBagInterface\\:\\:set\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/ParameterBag/ParameterBagInterface.php
+
+		-
+			message: "#^Cannot call method getName\\(\\) on ReflectionType\\|null\\.$#"
+			count: 1
+			path: src/Resolver/Resolver.php
+
+		-
+			message: "#^Cannot call method isBuiltin\\(\\) on ReflectionType\\|null\\.$#"
+			count: 1
+			path: src/Resolver/Resolver.php
+
+		-
+			message: "#^Method Container\\\\Resolver\\\\Resolver\\:\\:handleInterface\\(\\) has parameter \\$interface with generic class ReflectionClass but does not specify its types\\: T$#"
+			count: 1
+			path: src/Resolver/Resolver.php
+
+		-
+			message: "#^Method Container\\\\Resolver\\\\Resolver\\:\\:handleInterface\\(\\) is unused\\.$#"
+			count: 1
+			path: src/Resolver/Resolver.php
+
+		-
+			message: "#^Method Container\\\\Resolver\\\\Resolver\\:\\:resolve\\(\\) should return T of object but returns object\\.$#"
+			count: 1
+			path: src/Resolver/Resolver.php
+
+		-
+			message: "#^Method Container\\\\Resolver\\\\Resolver\\:\\:resolveMethodParams\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Resolver/Resolver.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method Container\\\\Resolver\\\\Resolver\\:\\:resolve\\(\\)$#"
+			count: 1
+			path: src/Resolver/Resolver.php
